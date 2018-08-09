@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <style>
+    /* Set the size of the div element that contains the map */
+
+    #map {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+  <title>Map</title>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script>
+    let map;
+    let marker;
+    const httpGet = (url, success) => {
+      const http = new XMLHttpRequest();
+      http.open('GET', url, true);
+      http.onreadystatechange = () => {
+        if (http.status === 0) {
+          console.log('Can\'t connect to the server...');
+        } else if (http.readyState === 4 && http.status === 200) {
+          success(http.response);
+        }
+      };
+      http.send();
+    }
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: -8.0403247, lng: -34.9120555 },
+        zoom: 13
+      });
+
+      const placeMarker = (location) => {
+        marker = new google.maps.Marker({
+          position: location,
+          map: map
+        });
+      }
+
+      const updateMarker = () => {
+        if(marker) marker.setMap(null);
+        httpGet('https://9d199c6c.ngrok.io/map/get', res => {
+          let data = JSON.parse(res);
+          let coords = new google.maps.LatLng(data.lat, data.lng);
+          placeMarker(coords);
+          // map.setCenter(coords);   
+        });
+      }
+
+      setInterval(updateMarker, 1000);
+
+    }
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkx9uXcRBC2k-EeHxyqvP-11KyzjBGBac&callback=initMap" async
+    defer></script>
+</body>
+
+</html>

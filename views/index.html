@@ -9,8 +9,10 @@
 </head>
 
 <body>
-  <div id="lat"></div>
-  <div id="lng"></div>
+  <h3>Tracking your position...</h3>
+  <!-- <input type="text" id="lat">
+  <input type="text" id="lng">
+  <button onclick="changePosition()">Click</button> -->
   <script>
     const httpGet = (url, success) => {
       const http = new XMLHttpRequest();
@@ -24,13 +26,20 @@
       };
       http.send();
     }
-    
+
     const getPosition = () => {
       navigator.geolocation.getCurrentPosition(data => {
-        httpGet(`https://a0b7e4ed.ngrok.io/coords?lat=${data.coords.latitude}&lng=${data.coords.longitude}`, () => {
+        httpGet(`https://9d199c6c.ngrok.io/coords?lat=${data.coords.latitude}&lng=${data.coords.longitude}`, () => {
           console.log(1);
         });
       });
+    }
+
+    const changePosition = () => {
+      console.log(1);
+      let latitude = document.getElementById('lat').value;
+      let longitude = document.getElementById('lng').value;
+      httpGet(`https://9d199c6c.ngrok.io/coords?lat=${latitude}&lng=${longitude}`, () => { });
     }
 
     setInterval(getPosition, 1000);
