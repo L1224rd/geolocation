@@ -6,8 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <style>
-    /* Set the size of the div element that contains the map */
-
     #map {
       position: absolute;
       height: 100%;
@@ -18,11 +16,12 @@
 </head>
 
 <body>
-  <div id="map"></div>
+  <div id="map"></div> 
   <script>
-    let map;
-    let marker;
-    const httpGet = (url, success) => {
+    let map; // where the google map will be stored
+    let marker; // needs to be accessed globally to be removed
+
+    const httpGet = (url, success) => { // standard js/ajax httpGet function
       const http = new XMLHttpRequest();
       http.open('GET', url, true);
       http.onreadystatechange = () => {
@@ -35,22 +34,22 @@
       http.send();
     }
 
-    function initMap() {
-      map = new google.maps.Map(document.getElementById('map'), {
+    function initMap() { // fired by the google maps api at the next script tag
+      map = new google.maps.Map(document.getElementById('map'), { // create new map
         center: { lat: -8.0403247, lng: -34.9120555 },
         zoom: 13
       });
 
-      const placeMarker = (location) => {
+      const placeMarker = (location) => { // function placeMarker needs to be inside initMap
         marker = new google.maps.Marker({
           position: location,
-          map: map
+          map: map // the map to put the marker, you can have multiple maps in the same page
         });
       }
 
       const updateMarker = () => {
-        if(marker) marker.setMap(null);
-        httpGet('https://9d199c6c.ngrok.io/map/get', res => {
+        if (marker) marker.setMap(null); // removes the previous marker
+        httpGet('https://9d199c6c.ngrok.io/map/get', res => { // get the coords from the server
           let data = JSON.parse(res);
           let coords = new google.maps.LatLng(data.lat, data.lng);
           placeMarker(coords);
@@ -58,7 +57,7 @@
         });
       }
 
-      setInterval(updateMarker, 1000);
+      setInterval(updateMarker, 1000); // updates the marker every 1 second
 
     }
   </script>
