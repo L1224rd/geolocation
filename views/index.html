@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Geolocation</title>
+</head>
+
+<body>
+  <div id="lat"></div>
+  <div id="lng"></div>
+  <script>
+    const httpGet = (url, success) => {
+      const http = new XMLHttpRequest();
+      http.open('GET', url, true);
+      http.onreadystatechange = () => {
+        if (http.status === 0) {
+          console.log('Can\'t connect to the server...');
+        } else if (http.readyState === 4 && http.status === 200) {
+          success(http.response);
+        }
+      };
+      http.send();
+    }
+    
+    const getPosition = () => {
+      navigator.geolocation.getCurrentPosition(data => {
+        httpGet(`https://a0b7e4ed.ngrok.io/coords?lat=${data.coords.latitude}&lng=${data.coords.longitude}`, () => {
+          console.log(1);
+        });
+      });
+    }
+
+    setInterval(getPosition, 1000);
+  </script>
+</body>
+
+</html>
